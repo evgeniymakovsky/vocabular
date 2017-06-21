@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:sec="http://www.springframework.org/security/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <title>Bootstrap 4 Dashboard</title>
+    <meta name="description"
+          content="A Bootstrap 4 admin dashboard theme that will get you started. The sidebar toggles off-canvas on smaller screens. This example also include large stat blocks, modal and cards. The top navbar is controlled by a separate hamburger toggle button."/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="generator" content="Codeply"/>
+
+
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"/>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="css/styles.css"/>
+</h:head>
+
+<h:body>
+    <nav class="navbar navbar-fixed-top navbar-toggleable-sm navbar-inverse bg-primary mb-3">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#collapsingNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="flex-row d-flex">
+            <a class="navbar-brand mb-1" href="welcome.xhtml">VOCABULAR</a>
+            <button type="button" class="hidden-md-up navbar-toggler" data-toggle="offcanvas"
+                    title="Toggle responsive left sidebar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container-fluid" id="main">
+        <div class="row row-offcanvas row-offcanvas-left">
+            <div class="col-md-3 col-lg-2 sidebar-offcanvas" id="sidebar" role="navigation">
+                <ul class="nav flex-column pl-1">
+                    <li class="nav-item"><a class="nav-link" href="#{userController.userAccount}">User account</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#{trainingController.training}">Start training</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#{statisticsController.statistics}">Statistics</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#{settingsController.settings}">Settings</a></li>
+                    <sec:authorize ifAllGranted="ROLE_ADMIN">
+                        <li class="nav-item"><a class="nav-link" href="#{adminController.admin}">Admin</a></li>
+                    </sec:authorize>
+                    <li class="nav-item"><a class="nav-link" href="j_spring_security_logout">Logout</a></li>
+                </ul>
+            </div>
+            <!--/col-->
+
+            <div class="col-md-9 col-lg-10 main">
+                <h:form >
+                    <!-- Помогло с проблемой отображения всплывающих сообщений!!!  <p:messages autoUpdate="true" /> -->
+
+                    <div>
+                        <p:commandButton id="english" value="English" action="#{trainingController.nextWord}" update="eng" onclick="PF('timer').restart()"/>
+                        <p:outputLabel for="english" id="eng" value="#{trainingController.next.english}"/>
+                    </div>
+                    <br/>
+                    <p:commandButton id="russian" value="Prompt" action="#{trainingController.onTimeout}"/>
+                    <br/>
+                    <br/>Time out:
+                    <p:growl autoUpdate="true"/>
+                    <pe:timer
+                            widgetVar="timer"
+                            timeout="20"
+                            forward="true"
+                            listener="#{trainingController.onTimeout}"
+                            singleRun="false"
+                            autoStart="false"/>
+                    <hr/>
+
+                    <p:outputLabel value="English: "/>
+                    <p:inputText value="#{trainingController.checkWord}" label="English"/>
+                    <p:commandButton value="Check" action="#{trainingController.check}" onclick="PF('timer').restart()"/>
+                </h:form>
+
+            </div>
+            <!--/main col-->
+        </div>
+
+    </div>
+
+    <script type="application/javascript" src="js/scripts.js"></script>
+</h:body>
+</html>
